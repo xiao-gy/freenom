@@ -276,11 +276,11 @@ $ cd /data/wwwroot/freenom/ && php run
 
 ![同意启用 Actions](https://s1.ax1x.com/2020/07/09/UeRusP.png "同意启用 Actions")
 
-4、修改项目 README.md 文件内容并提交一次，解决 Github Actions 计划任务的 Bug
+4、同意启用 Actions 后，参照下图，重新启用 scheduled workflows，即工作流程的计划任务
 
-![修改 README.md 文件 01](https://s1.ax1x.com/2020/07/09/UeWO39.png "修改 README.md 文件 01")
+*根据 [官方文档](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow)，`When a public repository is forked, scheduled workflows are disabled by default.` 故必须有此步骤才能让 fork 的仓库的 Github Actions 的定时任务生效。*
 
-![修改 README.md 文件 02](https://s1.ax1x.com/2020/07/09/UefEjI.png "修改 README.md 文件 02")
+![启用 scheduled workflows](https://s3.ax1x.com/2021/02/21/yTu0kq.png "启用 scheduled workflows")
 
 5、查看执行详情
 
