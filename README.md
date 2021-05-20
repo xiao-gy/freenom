@@ -23,8 +23,6 @@ Documentation: [English version](https://github.com/luolongfei/freenom/blob/mast
 
 [☕  验证](#--验证)
 
-[🤣  本项目最简单的使用方法](#--本项目最简单的使用方法)
-
 [🍺  信仰](#--信仰)
 
 [❤  捐赠 Donate](#--捐赠-donate)
@@ -37,6 +35,9 @@ Documentation: [English version](https://github.com/luolongfei/freenom/blob/mast
 
 [🥝  开源协议](#--开源协议)
 
+
+<h3>（注意，GitHub 官方不允许使用 github action 做签到或者续期类应用，否则会封禁项目甚至封号，故为项目能长期维护下去，本项目已经移除 
+action 方式的应用，请知悉。已经 fork 使用的，可以尽快将项目搬运到自己的 vps 上。后续我会对脚本做比较大的更新，简化部署流程以及增加新功能...不过得等忙过这段时间。）</h3>
 
 ### 📃  前言
 众所周知，Freenom是地球上唯一一个提供免费顶级域名的商家，不过需要每年续期，每次续期最多一年。由于我申请了一堆域名，而且不是同一时段申请的，
@@ -233,69 +234,6 @@ $ systemctl restart crond
 $ cd /data/wwwroot/freenom/ && php run
 ```
 不出意外的话，你将收到一封关于域名情况的邮件。
-
-<hr>
-
-### 🤣  本项目最简单的使用方法
-上面说了一堆都是基于你有自己的`VPS`的情况下，如果没有`VPS`又想自动续期`Freenom`的域名，或者单纯不想配置那么多东西，
-可以直接在`Github Actions`上跑本项目，`Github Actions`会为项目创建一个虚拟环境，并在执行后自动销毁。
-
-#### 只需简单 6 步
-
-1、Fork 本仓库
-
-2、在你 Fork 的本仓库下的 `Settings` -> `Secrets` 页面追加以下几个`secret`秘密环境变量
-
-<details>
-    <summary>点我查看需要添加的具体秘密变量</summary>
-<br>
-
-| 变量名 | 含义 | 默认值 | 是否必须 | 备注 |
-| :---: | :---: | :---: | :---: | :---: |
-| FREENOM_USERNAME | freenom 账户 | - | 是 | 只支持邮箱账户，不支持也不打算支持第三方社交账户登录 |
-| FREENOM_PASSWORD | freenom 密码 | - | 是 | 某些特殊字符可能需要转义，在`Github actions`环境，请在除字母数字以外的字符前加上“\”，否则可能无法正确读取密码，此举是防止某些字符在`shell`命令行被解析，举个例子，比如我密码是`fei.,:!~@#$%^&*?233-_abcd^$$`，那么写到秘密变量时就应写为`fei\.\,\:\!\~\@\#\$\%\^\&\*\?233\-\_abcd\^\$\$`。而在普通`VPS`环境，则只用在密码中的“#”或单双引号前加“\”，请参考`.env.example`文件内的注释，应该没人会设置那么变态的密码吧 |
-| MULTIPLE_ACCOUNTS | 多账户支持 | - | 否 | 多个账户和密码的格式必须是“`<账户1>@<密码1>\|<账户2>@<密码2>\|<账户3>@<密码3>`”，如果设置了多账户，上面的`FREENOM_USERNAME`和`FREENOM_PASSWORD`可不设置 |
-| MAIL_USERNAME | 机器人邮箱账户 | - | 是 | 支持`Gmail`、`QQ邮箱`以及`163邮箱`，尽可能使用`163邮箱`或者`QQ邮箱`，而非之前推荐的`Gmail`。因为谷歌的安全机制，每次在新设备登录 `Gmail` 都会先被限制，需要手动解除限制才行，而`Github Actions`每次创建的虚拟环境都会分配一个新的设备`IP`，相当于每次都是从新设备登录`Gmail`，而我们不可能每次都去手动为`Gmail`解除登录限制，所以这种机制会导致无法发出通知邮件。具体的配置方法参考「 [配置发信邮箱](#--配置发信邮箱) 」 |
-| MAIL_PASSWORD | 机器人邮箱密码 | - | 是 | `Gmail`填密码，`QQ邮箱`或`163邮箱`填授权码 |
-| TO | 接收通知的邮箱 | - | 是 | 你自己最常用的邮箱，推荐使用`QQ邮箱`，用来接收机器人邮箱发出的域名相关邮件 |
-| MAIL_ENABLE | 是否启用邮件推送功能 | true | 否 | `true`：启用<br>`false`：不启用<br>默认启用，如果设为`false`，不启用邮件推送功能，则上面的`MAIL_USERNAME`、`MAIL_PASSWORD`、`TO`变量变为非必须，可不设置 |
-| TELEGRAM_CHAT_ID | 你的`chat_id` | - | 否 | 通过发送`/start`给`@userinfobot`可以获取自己的`id` |
-| TELEGRAM_BOT_TOKEN | 你的`Telegram bot`的`token` | - | 否 ||
-| TELEGRAM_BOT_ENABLE | 是否启用`Telegram Bot`推送功能 | false | 否 | `true`：启用<br>`false`：不启用<br>默认不启用，如果设为`true`，则必须设置上面的`TELEGRAM_CHAT_ID`和`TELEGRAM_BOT_TOKEN`变量 |
-| NOTICE_FREQ | 通知频率 | 1 | 否 | `0`：仅当有续期操作的时候<br>`1`：每次执行 |
-
-（注：你只用关注上面表格中的必须项，非必须项可不设置，将保持默认值。更多相关变量的含义、格式以及默认值，请参考本项目的`.env.example`文件内的注释）
-
-</details>
-
-![设置秘密环境变量](https://s1.ax1x.com/2020/07/09/Ue20Cd.png "设置秘密环境变量")
-
-![新建变量画面](https://s1.ax1x.com/2020/07/09/UeRUs0.png "新建变量画面")
-
-3、同意启用 Actions
-
-![同意启用 Actions](https://s1.ax1x.com/2020/07/09/UeRusP.png "同意启用 Actions")
-
-4、同意启用 Actions 后，参照下图，重新启用 scheduled workflows，即工作流程的计划任务
-
-*根据 [官方文档](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow)，`When a public repository is forked, scheduled workflows are disabled by default.` 故必须有此步骤才能让 fork 的仓库的 Github Actions 的定时任务生效。*
-
-![启用 scheduled workflows](https://s3.ax1x.com/2021/02/21/yTu0kq.png "启用 scheduled workflows")
-
-5、查看执行详情
-
-![查看执行详情 01](https://s1.ax1x.com/2020/07/09/UehHSJ.png "查看执行详情 01")
-
-![查看执行详情 02](https://s1.ax1x.com/2020/07/09/Ue4i6A.png "查看执行详情 02")
-
-![查看执行详情 03](https://s1.ax1x.com/2020/07/09/Ue4Q6s.png "查看执行详情 03")
-
-6、心里默念作者最帅，给个`star`并把本项目推荐给更多的人，用的人越多作者更新的动力越足
-
-好了，做完上面六步后就不需要其它任何操作了。现在每天上午十点左右`Github Actions`会自动触发执行本项目，注意查收域名相关邮件。
-
-
-<hr>
 
 遇到任何问题或 Bug 欢迎提 [issues](https://github.com/luolongfei/freenom/issues) （请按模板格式提`issues`，以便作者更快复现你的问题），
 如果`Freenom`改变算法导致此项目失效，请提 [issues](https://github.com/luolongfei/freenom/issues) 告知，我会及时修复，本项目长期维护。
