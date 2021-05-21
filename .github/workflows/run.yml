@@ -19,10 +19,13 @@ on:
     branches:
       - master
   schedule:
-    - cron: 45 06 * * *
+    - cron: 35 06 * * *
+  workflow_dispatch:
+
 jobs:
   run-it:
     runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id
     name: Run it on action
     steps:
       - name: Checkout master

@@ -11,11 +11,18 @@ assignees: ''
 ```
 A clear and concise description of what the bug is.
 ```
+
 **重现步骤**
 ```
 步骤一
 ```
+
 **截图&日志**
+
+**你做了哪些尝试**
+```
+描述你发现问题后做了哪些尝试，方便我快速排除某些问题，提高沟通效率。
+```
 
 **环境信息**
  - centos7 x64
